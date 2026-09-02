@@ -66,11 +66,11 @@ CFG_DSPL macro
 endm
 
 CFG_DIGITS_DSPL macro
-    movlw   d'6'       ;Numero 6 o Letra G en Display1
+    movlw   d'1'       ;Numero 6 o Letra G en Display1
     movwf   DATA_DSPL_1
     movlw   d'2'	      ;Digito 2 en Display2
     movwf   DATA_DSPL_2
-    movlw   d'1'	      ;Digito 1 en Display3
+    movlw   d'6'	      ;Digito 1 en Display3
     movwf   DATA_DSPL_3
 endm
     
@@ -138,7 +138,7 @@ INICIO	    ;-----Inicialización de Macros-------
 ; INICIO PROGRAMA PRINCIPAL
 ;===============================================================================						
 MAIN_LOOP
-    ;call MUX_DSPL
+    call MUX_DSPL
     GOTO    MAIN_LOOP	
 	
 ;===============================================================================
@@ -265,13 +265,14 @@ return
 ;***************************
 ;===============================================================================
 UPDATE_DSPL_3
-    movfw    DATA_DSPL_3
+    movfw   DATA_DSPL_3
     call    TABLE_DECO_DSPL_AC
     movwf   PORTD
     movfw    COUNTER_DSPL
     call    TABLE_CTRL_DSPL_AC
     movwf   PORTC
-    goto    DECF_COUNTER_DSPL
+    call    DECF_COUNTER_DSPL
+return    
     
 UPDATE_DSPL_2
     movfw    DATA_DSPL_2
@@ -280,7 +281,8 @@ UPDATE_DSPL_2
     movfw    COUNTER_DSPL
     call    TABLE_CTRL_DSPL_AC
     movwf   PORTC
-    goto    DECF_COUNTER_DSPL
+    call    DECF_COUNTER_DSPL
+return    
     
 UPDATE_DSPL_1
     movfw    DATA_DSPL_1
@@ -289,8 +291,39 @@ UPDATE_DSPL_1
     movfw    COUNTER_DSPL
     call    TABLE_CTRL_DSPL_AC
     movwf   PORTC
-    goto    DECF_COUNTER_DSPL    
-   	
+    call    DECF_COUNTER_DSPL
+return    
+    
+;===============================================================================
+;***************************
+; @brief    Subrutina de Multiplexado
+;           
+; @details  Muestra la información alternando los displays.
+;***************************
+;===============================================================================    
+MUX_DSPL
+    CFG_DELAY_3ms33
+    call    DELAY_3LOOP
+    
+    movfw    COUNTER_DSPL
+    xorlw   .3
+    btfsc   STATUS, Z
+    call    UPDATE_DSPL_3
+    
+    movfw    COUNTER_DSPL
+    xorlw   .2
+    btfsc   STATUS, Z
+    call    UPDATE_DSPL_2
+
+    movfw    COUNTER_DSPL
+    xorlw   .1
+    btfsc   STATUS, Z
+    call    UPDATE_DSPL_1
+    
+    call    RST_COUNTER_DSPL
+return
+
+;===============================================================================   	
 ;===============================================================================    
     END
 ;===============================================================================
