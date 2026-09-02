@@ -102,12 +102,12 @@ CFG_DELAY_300ms macro
     movwf   DELAY3_Init
 endm
 
-CFG_DELAY_1s macro
-    movlw   d'10'
+CFG_DELAY_2s macro
+    movlw   d'31'
     movwf   DELAY1_Init
-    movlw   d'130'
+    movlw   d'144'
     movwf   DELAY2_Init
-    movlw   d'255'
+    movlw   d'148'
     movwf   DELAY3_Init
 endm
 
@@ -213,8 +213,7 @@ TEST_DSPL
 	    call    TABLE_CTRL_DSPL_AC
 	    movwf   PORTC
 	    
-	    ;CFG_DELAY_300ms
-	    CFG_DELAY_1s
+	    CFG_DELAY_300ms
 	    movlw   b'11111110'         ; Prende el primer segmento
 	    movwf   SEGMENT_SHADOW
 	    movlw   .7
@@ -227,10 +226,10 @@ TEST_DSPL
 		    rlf     SEGMENT_SHADOW, F
 		    decfsz  COUNTER_SEGMENTS, F
 		    goto    LOOP_TEST_SEGMENT
-	    CFG_DELAY_1s
+	    CFG_DELAY_2s
 	    clrf PORTD    ; Todos on
 	    call DELAY_3LOOP
-	    comf PORTD,F
+	    comf PORTD,F  ; Todos off  
 	    call DELAY_3LOOP
 	    
 	    decfsz  COUNTER_DSPL, F
