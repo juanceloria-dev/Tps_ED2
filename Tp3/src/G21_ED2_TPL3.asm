@@ -205,7 +205,40 @@ TEST_DSPL
     goto RST_COUNTER_DSPL
     LOOP_TEST_DSPL
 	    movf    COUNTER_DSPL
+	    call    TABLE_CTRL_DSPL_AC
+	    movwf   PORTC
+	    
+	    CFG_DELAY_300ms
+	    movlw   b'11111110'         ; Prende el primer segmento
+	    movwf   SEGMENT_SHADOW
+	    movlw   .7
+	    movwf   COUNTER_SEGMENTS
+	    LOOP_TEST_SEGMENT
+		    movf    SEGMENT_SHADOW
+		    movwf   PORTD
+		    call DELAY_3LOOP
     return
+;===============================================================================
+;***************************
+; @brief    Subrutina de Retardo por Software.
+;           
+; @details  Implementa 3 bucles anidados.
+;***************************
+; t_DELAY = (4 / f_clk) * [(3 * DELAY3 * DELAY2 * DELAY1) + (4 * DELAY2 * DELAY1) + (4 * DELAY1) + 5
+DELAY_3LOOP
+	movfw DELAY1_Init
+	movwf DELAY1
+LOOP1   movfw DELAY2_Init
+	movwf DELAY2
+LOOP2   movfw DELAY3_Init
+	movwf DELAY3
+LOOP3   decfsz DELAY3,F
+	goto LOOP3
+	decfsz DELAY2,F
+	goto LOOP2
+	decfsz DELAY1,F
+	goto LOOP1
+return
 ;===============================================================================    
     END
 ;===============================================================================
