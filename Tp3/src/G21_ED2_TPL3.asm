@@ -257,6 +257,40 @@ LOOP3   decfsz DELAY3,F
 	decfsz DELAY1,F
 	goto LOOP1
 return
+;===============================================================================
+;***************************
+; @brief    Subrutina de actualización de datos.
+;           
+; @details  Actualiza el display con los datos buscados en la tabla.
+;***************************
+;===============================================================================
+UPDATE_DSPL_3
+    movfw    DATA_DSPL_3
+    call    TABLE_DECO_DSPL_AC
+    movwf   PORTD
+    movfw    COUNTER_DSPL
+    call    TABLE_CTRL_DSPL_AC
+    movwf   PORTC
+    goto    DECF_COUNTER_DSPL
+    
+UPDATE_DSPL_2
+    movfw    DATA_DSPL_2
+    call    TABLE_DECO_DSPL_AC
+    movwf   PORTD
+    movfw    COUNTER_DSPL
+    call    TABLE_CTRL_DSPL_AC
+    movwf   PORTC
+    goto    DECF_COUNTER_DSPL
+    
+UPDATE_DSPL_1
+    movfw    DATA_DSPL_1
+    call    TABLE_DECO_DSPL_AC
+    movwf   PORTD
+    movfw    COUNTER_DSPL
+    call    TABLE_CTRL_DSPL_AC
+    movwf   PORTC
+    goto    DECF_COUNTER_DSPL    
+   	
 ;===============================================================================    
     END
 ;===============================================================================
