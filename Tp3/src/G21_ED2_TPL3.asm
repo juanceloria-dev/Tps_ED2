@@ -202,7 +202,7 @@ TABLE_DECO_DSPL_AC
 ;***************************
 ;===============================================================================
 TEST_DSPL
-    goto RST_COUNTER_DSPL
+    call RST_COUNTER_DSPL
     LOOP_TEST_DSPL
 	    movf    COUNTER_DSPL
 	    call    TABLE_CTRL_DSPL_AC
@@ -217,6 +217,18 @@ TEST_DSPL
 		    movf    SEGMENT_SHADOW
 		    movwf   PORTD
 		    call DELAY_3LOOP
+		    rlf     SEGMENT_SHADOW, F
+		    decfsz  COUNTER_SEGMENTS, F
+		    goto    LOOP_TEST_SEGMENT
+	    CFG_DELAY_1s
+	    clrf PORTD    ; Todos on
+	    call DELAY_3LOOP
+	    comf PORTD,F
+	    call DELAY_3LOOP
+	    
+	    decfsz  COUNTER_DSPL, F
+	    goto    LOOP_TEST_DSPL
+    call RST_COUNTER_DSPL		    
     return
 ;===============================================================================
 ;***************************
