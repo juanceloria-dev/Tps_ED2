@@ -110,7 +110,7 @@ endm
 
 CFG_COUNTER_DSPL macro
    movlw .3
-   movwf COUNTER_DSPL
+   movf COUNTER_DSPL
 endm    
 ;===============================================================================
 ; INICIALIZACIÓN DEL MCU (CÓDIGO ABSOLUTO)
@@ -125,7 +125,7 @@ endm
 ;===============================================================================    	    
 INICIO	    ;-----Inicialización de Macros-------
 	CFG_DSPL
-        call    TEST_DSPL
+        ;call    TEST_DSPL
 	CFG_DELAY_3ms33
 	CFG_DIGITS_DSPL
 		
@@ -133,7 +133,7 @@ INICIO	    ;-----Inicialización de Macros-------
 ; INICIO PROGRAMA PRINCIPAL
 ;===============================================================================						
 MAIN_LOOP
-    call MUX_DSPL
+    ;call MUX_DSPL
     GOTO    MAIN_LOOP	
 	
 ;===============================================================================
@@ -160,7 +160,41 @@ DECF_COUNTER_DSPL
     movlw  .1
     subwf  COUNTER_DSPL, F 
     return
-;===============================================================================		
+;===============================================================================
+;***************************
+; @brief    Subrutina de tabla de control.
+;           
+; @details  Retorna que display vamos a utilizar.
+;***************************
+;===============================================================================
+TABLE_CTRL_DSPL_AC
+    addwf   PCL, F
+    retlw   b'11111111' ; 0: Displays off
+    retlw   b'11111110' ; 1: DSPL1
+    retlw   b'11111101' ; 2: DSPL2
+    retlw   b'11111011' ; 3: DSPL3
+;===============================================================================
+;***************************
+; @brief    Subrutina de tabla de decodificacion.
+;           
+; @details  Retorna el hexa para mostrar el numero en el display.
+;***************************
+;===============================================================================  
+TABLE_DECO_DSPL_AC
+    addwf   PCL, F
+    retlw   0xC0 ; 0 en HEX
+    retlw   0xF9 ; 1 en HEX
+    retlw   0xA4 ; 2 en HEX
+    retlw   0xB0 ; 3 en HEX
+    retlw   0x99 ; 4 en HEX
+    retlw   0x92 ; 5 en HEX
+    retlw   0x82 ; 6 en HEX
+    retlw   0xF8 ; 7 en HEX
+    retlw   0x80 ; 8 en HEX
+    retlw   0x98 ; 9 en HEX
+    retlw   0x82 ; G en HEX
+    retlw   0xFF ; Off     
+;===============================================================================    
     END
 ;===============================================================================
 
