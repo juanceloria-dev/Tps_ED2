@@ -170,9 +170,9 @@ DECF_COUNTER_DSPL
 TABLE_CTRL_DSPL_AC
     addwf   PCL, F
     retlw   b'11111111' ; 0: Displays off
-    retlw   b'11111110' ; 1: DSPL1
-    retlw   b'11111101' ; 2: DSPL2
     retlw   b'11111011' ; 3: DSPL3
+    retlw   b'11111101' ; 2: DSPL2
+    retlw   b'11111110' ; 1: DSPL1
 ;===============================================================================
 ;***************************
 ; @brief    Subrutina de tabla de decodificacion.
@@ -194,6 +194,18 @@ TABLE_DECO_DSPL_AC
     retlw   0x98 ; 9 en HEX
     retlw   0x82 ; G en HEX
     retlw   0xFF ; Off     
+;===============================================================================
+;***************************
+; @brief    Subrutina de testeo.
+;           
+; @details  Controla si funcionan los segmentos.
+;***************************
+;===============================================================================
+TEST_DSPL
+    goto RST_COUNTER_DSPL
+    LOOP_TEST_DSPL
+	    movf    COUNTER_DSPL
+    return
 ;===============================================================================    
     END
 ;===============================================================================
