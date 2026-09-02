@@ -53,10 +53,15 @@ endc
 
 CFG_DSPL macro
     bcf	    STATUS,RP1
-    bsf	    STATUS,RP0	   ;Banco 1
-    bcf     TRISC, TRISC0 ; RC0 como salida
-    bcf     TRISC, TRISC1 ; RC1 como salida
-    bcf     TRISC, TRISC2 ; RC2 como salida
+    bsf	    STATUS,RP0	    ;Banco 1
+    bcf     TRISC, TRISC0   ; RC0 como salida
+    bcf     TRISC, TRISC1   ; RC1 como salida
+    bcf     TRISC, TRISC2   ; RC2 como salida
+    clrf    TRISD	    ; RCD completo como salida
+    bcf	    STATUS,RP0	    ;Banco 0
+    movlw   b'11111111'
+    movwf   PORTD
+    
     DSPL_ALL_OFF
 endm
 
@@ -125,7 +130,7 @@ endm
 ;===============================================================================    	    
 INICIO	    ;-----Inicialización de Macros-------
 	CFG_DSPL
-        ;call    TEST_DSPL
+        call    TEST_DSPL
 	CFG_DELAY_3ms33
 	CFG_DIGITS_DSPL
 		
@@ -204,19 +209,21 @@ TABLE_DECO_DSPL_AC
 TEST_DSPL
     call RST_COUNTER_DSPL
     LOOP_TEST_DSPL
-	    movf    COUNTER_DSPL
+	    movfw    COUNTER_DSPL
 	    call    TABLE_CTRL_DSPL_AC
 	    movwf   PORTC
 	    
-	    CFG_DELAY_300ms
+	    ;CFG_DELAY_300ms
+	    CFG_DELAY_1s
 	    movlw   b'11111110'         ; Prende el primer segmento
 	    movwf   SEGMENT_SHADOW
 	    movlw   .7
 	    movwf   COUNTER_SEGMENTS
 	    LOOP_TEST_SEGMENT
-		    movf    SEGMENT_SHADOW
+		    movfw    SEGMENT_SHADOW
 		    movwf   PORTD
-		    call DELAY_3LOOP
+		    call    DELAY_3LOOP
+		    bsf	    STATUS,C
 		    rlf     SEGMENT_SHADOW, F
 		    decfsz  COUNTER_SEGMENTS, F
 		    goto    LOOP_TEST_SEGMENT
